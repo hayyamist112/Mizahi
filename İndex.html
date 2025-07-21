@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gülümseten Kartlar</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffe38e">
+
+  <!-- Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("Service Worker yüklendi!"))
+        .catch(err => console.error("SW hatası:", err));
+    }
+  </script>
+
+  <!-- Stil -->
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #fff8dc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #333;
+      text-align: center;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    #quote {
+      font-size: 18px;
+      margin: 30px 0;
+      padding: 10px;
+      background: #fff;
+      border: 2px dashed #ffc107;
+      border-radius: 8px;
+      max-width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #ffc107;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ffcd39;
+    }
+  </style>
+</head>
+<body>
+  <h1>😂 Gülümseten Kartlar</h1>
+  <div id="quote">Yükleniyor...</div>
+  <button onclick="getNewQuote()">Bir tane daha!</button>
+
+  <script>
+    let quotes = [];
+
+    async function loadQuotes() {
+      try {
+        const res = await fetch('content.json');
+        quotes = await res.json();
+        getNewQuote();
+      } catch (e) {
+        document.getElementById('quote').textContent = "İçerikler yüklenemedi 😢";
+      }
+    }
+
+    function getNewQuote() {
+      if (quotes.length > 0) {
+        const random = Math.floor(Math.random() * quotes.length);
+        document.getElementById('quote').textContent = quotes[random];
+      }
+    }
+
+    window.addEventListener('load', loadQuotes);
+  </script>
+</body>
+</html>
